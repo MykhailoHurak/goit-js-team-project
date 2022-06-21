@@ -1,4 +1,9 @@
 import { getMovieById } from './Api';
+import {
+  changeWatchedButtonCondition,
+  changeQueueButtonCondition,
+} from './change-button-condition';
+import { parsLoc } from './change-button-condition';
 
 const refs = {
   openModalFilm: document.querySelector('.card-set'),
@@ -7,8 +12,10 @@ const refs = {
   backdropModalFilm: document.querySelector('.backdrop'),
   modalFilm: document.querySelector('.film-card__box'),
 };
+const spinModal = document.querySelector('.spinner--modal');
 
-const onClick = async e => {
+const onOpenModal = async e => {
+  spinModal.classList.add('spinner');
   if (!e.target.closest('.card-set__item')) {
     return;
   }
@@ -22,12 +29,23 @@ const onClick = async e => {
   const infoAboutModalFilm = await getMovieById(getFilmId);
 
   renderModalFilm(infoAboutModalFilm);
+
+  const watchedBtn = document.querySelector('.description-button__watched');
+  const queueBtn = document.querySelector('.description-button__queue');
+  changeWatchedButtonCondition(getFilmId, watchedBtn);
+  changeQueueButtonCondition(getFilmId, queueBtn);
+
+  spinModal.classList.remove('spinner');
+
+  refs.body.addEventListener('keydown', onKeyPress);
+  refs.backdropModalFilm.addEventListener('click', onBackdropClick);
 };
 
 const renderModalFilm = modalFilm => {
   const {
     poster_path,
     title,
+    id,
     vote_average,
     vote_count,
     popularity,
@@ -74,10 +92,10 @@ const renderModalFilm = modalFilm => {
         <p class="description-about__text">${overview}</p>
       </div>
       <div class="film-card__description-button">
-        <button class="description-button description-button__watched">
+        <button class="description-button description-button__watched" data-id="${id}">
           add to Watched
         </button>
-        <button class="description-button description-button__queue">
+        <button class="description-button description-button__queue" data-id="${id}">
           add to queue
         </button>
       </div>
@@ -87,7 +105,24 @@ const renderModalFilm = modalFilm => {
   refs.modalFilm.insertAdjacentHTML('beforeend', markupModalFilm);
 };
 
-refs.openModalFilm.addEventListener('click', onClick);
+const onKeyPress = e => {
+  if (e.code === 'Escape') {
+    console.log(e.code);
+    refs.backdropModalFilm.classList.add('visually-hidden');
+    refs.body.style.overflow = 'visible';
+    refs.body.removeEventListener('keydown', onKeyPress);
+  }
+};
+
+const onBackdropClick = e => {
+  if (e.target.closest('.film-card')) {
+    return;
+  }
+  refs.backdropModalFilm.classList.add('visually-hidden');
+  refs.body.style.overflow = 'visible';
+};
+
+refs.openModalFilm.addEventListener('click', onOpenModal);
 
 refs.closeModalFilm.addEventListener('click', () => {
   refs.backdropModalFilm.classList.add('visually-hidden');
