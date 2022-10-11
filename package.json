@@ -2,20 +2,20 @@
   "name": "goit-js-team-project",
   "version": "2.0.0",
   "description": "",
-  "homepage": "https://mikegurak.github.io/goit-js-team-project",
+  "homepage": "https://mykhailohurak.github.io/goit-js-team-project",
   "scripts": {
     "start": "parcel src/*.html",
     "build": "parcel build src/*.html --public-url /goit-js-team-project/"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mikegurak/goit-js-team-project.git"
+    "url": "git+https://github.com/mykhailohurak/goit-js-team-project.git"
   },
   "keywords": [],
   "author": " ",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mikegurak/goit-js-team-project/issues"
+    "url": "https://github.com/mykhailohurak/goit-js-team-project/issues"
   },
   "dependencies": {
     "basiclightbox": "^5.0.4",
